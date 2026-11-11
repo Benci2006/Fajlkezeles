@@ -13,3 +13,23 @@ content-type: application/json
     "text": "ITT van"
     
 }
+
+###
+
+POST http://127.0.0.1:3000/api/write-json
+content-type: application/json
+
+{
+    "name": "HIhi",
+    "age": 14
+    
+}
+###
+
+POST http://127.0.0.1:3000/api/append-text
+content-type: application/json
+
+{
+    "text": "Máté"
+    
+}

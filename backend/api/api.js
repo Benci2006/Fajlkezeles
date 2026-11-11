@@ -8,6 +8,7 @@ const multer = require('multer'); //?npm install multer
 const path = require('path');
 const { threadCpuUsage } = require('process');
 const { request } = require('http');
+const { appendFile } = require('fs');
 
 //fajlkezeles szinkron modon
 // const fs2 = require('fs');//Amennyiben szinkron akkor csak fsre van szukseg
@@ -69,9 +70,64 @@ const writejsonfile = async(filePath, content)=>{
 
 //file letezik e
 
+const fileExists = async(filePath)=>{
+
+    try{
+        await fs.access(filePath)
+        return true//ha a fuggvenyhivas nem ad hibat ugy letezik a file
+    }
+    catch(error){
+        return false
+    }
+
+}
+
+//meghivasa
+
+// const exists = await fileExists("valami.txt")
+// if(exists){
+//     console.log("Létezik")
+// }
+// else{
+//     console.log("Nem Létezk")
+// }
+
 //file bovitese
 
+const appendtextfile=async(filePath, content)=>{
+    try{
+        await appendFile(filePath, content, "utf8")
+        return "A fajl sikeresen bovitve"
+    }
+    catch(error){
+        throw new Error("Hiba: ", error)
+    }
+}
 //endpoints
+router.post('/append-text', async(request, response)=>{
+
+    try{
+        const text = request.body.text
+        const utvonal =  path.join(__dirname, '../files/notes.txt')
+        const message = await appendtextfile(utvonal, text)
+        response.status(200).json({
+            
+            success: true,
+            Message: message
+        })
+        
+        
+    }   
+    catch(error)
+    {
+        response.status(500).json({
+            success:false
+        })
+        
+    }
+
+    
+})
 
 router.post('/write-json', async(request, response)=>{
 
